@@ -1,30 +1,12 @@
-import Box from "@mui/material/Box";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
+import AuthProvider from "./auth";
+import Layout from "./views/Layout";
 
-function App() {
+const App = () => {
   return (
-    <>
-      <Box
-        sx={{ flexGrow: 1, display: "flex", width: "100vw", maxWidth: "100%" }}
-      >
-        <Header />
-        <Main />
-      </Box>
-      <Footer />
-    </>
+    <AuthProvider>
+      <Layout />
+    </AuthProvider>
   );
-}
-
-function Main() {
-  return (
-    <Box
-      component="main"
-      sx={{ flexGrow: 1, width: "100%", pt: `var(--header-height)` }}
-    >
-      {"Test Content"}
-    </Box>
-  );
-}
+};
 
 export default App;

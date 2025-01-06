@@ -24,17 +24,12 @@ import Stack from "@mui/material/Stack";
 import { CSSObject, Theme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { useMemo, useState } from "react";
-import { routes } from "../../routes";
-import { Session } from "../../types/auth";
+import { useState } from "react";
+import { useAuth } from "../../auth";
+import { routes } from "../../router";
 import { AppName } from "../../utils/constants";
 
 const Header = () => {
-  const testUser = {
-    name: "Test Username",
-    email: "test.username@test.test",
-  };
-
   const drawerWidth = 240;
   const theme = useTheme();
   const color = `primary.${theme.palette.mode}`;
@@ -74,22 +69,7 @@ const Header = () => {
     },
   });
 
-  const [session, setSession] = useState<Session | null>({
-    user: testUser,
-  });
-
-  const authentication = useMemo(() => {
-    return {
-      signIn: () => {
-        setSession({
-          user: testUser,
-        });
-      },
-      signOut: () => {
-        setSession(null);
-      },
-    };
-  }, []);
+  const { session, authentication } = useAuth();
 
   const menuId = "user-menu";
   // user-menu
