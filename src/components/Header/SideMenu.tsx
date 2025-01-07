@@ -3,8 +3,8 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  useTheme,
 } from "@mui/material";
-import Link from "@mui/material/Link";
 import { NavLink } from "react-router-dom";
 import { SideRouteType } from "../../router/sideRoutes";
 import { useIsMini } from "./IsMiniProvider";
@@ -17,16 +17,18 @@ const SideMenu = ({ routes }: { routes: SideRouteType[] }) => {
 
 const SideMenuItem = ({ text, IconTag, url }: SideRouteType) => {
   const { isMini } = useIsMini();
+  const theme = useTheme();
 
   return (
     <ListItem key={text} disablePadding sx={{ display: "block" }}>
-      <Link
+      <NavLink
         to={url}
-        component={NavLink}
-        style={{
-          color: "inherit",
+        style={({ isActive }) => ({
           textDecoration: "none",
-        }}
+          color: !isActive
+            ? "inherit"
+            : theme.palette.primary[theme.palette.mode],
+        })}
       >
         <ListItemButton
           sx={[
@@ -57,7 +59,7 @@ const SideMenuItem = ({ text, IconTag, url }: SideRouteType) => {
             }}
           />
         </ListItemButton>
-      </Link>
+      </NavLink>
     </ListItem>
   );
 };
