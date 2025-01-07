@@ -1,8 +1,8 @@
 import { Button, useTheme } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
 import Toolbar from "@mui/material/Toolbar";
+import { NavLink } from "react-router-dom";
 import { useAuth } from "../../auth";
 import { AppName } from "../../utils/constants";
 import IsMiniProvider from "./IsMiniProvider";
@@ -37,7 +37,7 @@ const Header = () => {
               <Box sx={{ display: "flex" }}>
                 {session && <UserMenuToggler menuId={menuId} />}
                 {!session && (
-                  <Button variant="outlined" component={Link} href="/login">
+                  <Button variant="outlined" component={NavLink} to="/login">
                     Login
                   </Button>
                 )}
