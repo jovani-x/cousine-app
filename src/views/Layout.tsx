@@ -1,6 +1,8 @@
+import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
 import { ReactNode } from "react";
 import { Outlet, ScrollRestoration } from "react-router-dom";
+import Breadcrumbs from "../components/Breadcrumbs";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
@@ -10,7 +12,14 @@ const Main = ({ children }: { children?: ReactNode }) => {
       component="main"
       sx={{ flexGrow: 1, width: "100%", pt: `var(--header-height)` }}
     >
-      {children ?? <Outlet />}
+      {children ?? (
+        <>
+          <Container>
+            <Breadcrumbs />
+            <Outlet />
+          </Container>
+        </>
+      )}
     </Box>
   );
 };
