@@ -2,7 +2,13 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 
-export const routes = [
+export type SideRouteType = {
+  url: string;
+  text: string;
+  IconTag: JSX.Element;
+};
+
+export const routes: SideRouteType[] = [
   {
     url: "/",
     text: "Home",
