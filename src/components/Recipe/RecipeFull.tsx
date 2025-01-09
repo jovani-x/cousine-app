@@ -15,10 +15,11 @@ const RecipeFull = ({
 
   const title =
     !data || loading ? <Skeleton /> : `RecipeFull Component id=${data.id}`;
+  const subheader = !data || loading ? <Skeleton /> : data.title;
 
   return (
     <Card sx={{ mb: 3 }}>
-      <CardHeader title={title} />
+      <CardHeader title={title} subheader={subheader} />
     </Card>
   );
 };

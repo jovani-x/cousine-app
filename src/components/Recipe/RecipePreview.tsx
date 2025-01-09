@@ -5,17 +5,19 @@ import { NavLink } from "react-router-dom";
 import { RecipeType } from "../../types/recipe";
 
 const RecipePreview = ({ data }: { data: RecipeType }) => {
+  const pathName = `recipe_${data.id}`;
+
   return (
     <Card>
       <CardActionArea
         component={NavLink}
-        to={`/collection/${data.id}`}
+        to={`/collection/${pathName}`}
         style={{
           display: "flex",
           flexDirection: "column",
         }}
       >
-        <CardHeader title="RecipePreview Component" />
+        <CardHeader title="RecipePreview Component" subheader={data.title} />
       </CardActionArea>
     </Card>
   );
