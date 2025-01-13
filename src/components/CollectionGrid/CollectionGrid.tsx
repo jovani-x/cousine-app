@@ -14,7 +14,7 @@ const CollectionGrid = ({
   const size = { xs: 12, sm: 6, md: 6, lg: 4, xl: 3 };
   const renderedGrid = loading ? (
     <LoadingGrid gridSize={size} />
-  ) : !collection ? (
+  ) : !collection?.length ? (
     <NoData />
   ) : (
     collection.map((data) => {
