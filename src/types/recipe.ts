@@ -1,4 +1,5 @@
 import { IngredientInformationNutrition } from "../models/IngredientInformationNutrition";
+import { IngredientInformationNutritionPropertiesInner } from "../models/IngredientInformationNutritionPropertiesInner";
 import { RecipeInformation } from "../models/RecipeInformation";
 
 // TS models for Spoonacular API
@@ -18,4 +19,11 @@ type SearchOpts = {
   isMyCollection: boolean;
 };
 
-export { type RecipeType, type SearchOpts };
+type RecipeDetailsType = Pick<
+  RecipeInformation,
+  "vegetarian" | "vegan" | "glutenFree" | "dairyFree"
+> & {
+  caloriesObj?: IngredientInformationNutritionPropertiesInner;
+};
+
+export { type RecipeDetailsType, type RecipeType, type SearchOpts };

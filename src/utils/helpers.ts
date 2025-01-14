@@ -47,10 +47,20 @@ const getValuesFromFData = <T extends Record<string, string>>({
   return Object.assign({}, ...arr);
 };
 
+const getTimeStrFromMinutes = (readyInMinutes: number) => {
+  if (readyInMinutes < 60) return `${readyInMinutes} minutes`;
+
+  const minutes = readyInMinutes % 60;
+  const hours = (readyInMinutes - minutes) / 60;
+
+  return `${hours} h ${minutes} min`;
+};
+
 export {
   fdataToNumber,
   getErrorMessage,
   getInitialStateFromEnum,
+  getTimeStrFromMinutes,
   getValuesFromFData,
   isAnySelected,
 };
