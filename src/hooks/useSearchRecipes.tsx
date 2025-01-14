@@ -65,12 +65,19 @@ const searchRecipesRemote = async ({ opts }: { opts?: SearchOpts }) => {
   const apiKey = getRecipeApiKey();
   const apiUrl = getRecipeApiUrl();
 
-  const { resultNumber, diets, query, minCalories, maxCalories } = opts || {};
+  const {
+    resultNumber,
+    addRecipeInformation,
+    diets,
+    query,
+    minCalories,
+    maxCalories,
+  } = opts || {};
   const queryStr = getQueryStr(query);
   const dietStr = getDietsStr(diets);
   const minCaloriesStr = !minCalories ? "" : `&minCalories=${minCalories}`;
   const maxCaloriesStr = !maxCalories ? "" : `&maxCalories=${maxCalories}`;
-  const fullQueryStr = `${apiUrl}/complexSearch?apiKey=${apiKey}&number=${resultNumber}${queryStr}${dietStr}${minCaloriesStr}${maxCaloriesStr}`;
+  const fullQueryStr = `${apiUrl}/complexSearch?apiKey=${apiKey}&number=${resultNumber}&addRecipeInformation=${addRecipeInformation}&addRecipeNutrition=true${queryStr}${dietStr}${minCaloriesStr}${maxCaloriesStr}`;
 
   const response = await axios.get(fullQueryStr, {});
 
