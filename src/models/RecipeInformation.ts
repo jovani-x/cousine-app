@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { AnalyzeRecipeInstructions200ResponseParsedInstructionsInner } from "../models/AnalyzeRecipeInstructions200ResponseParsedInstructionsInner";
 import { RecipeInformationExtendedIngredientsInner } from "../models/RecipeInformationExtendedIngredientsInner";
 import { RecipeInformationWinePairing } from "../models/RecipeInformationWinePairing";
 import { TasteInformation } from "../models/TasteInformation";
@@ -35,7 +36,7 @@ export class RecipeInformation {
   "spoonacularScore": number;
   "pricePerServing": number;
   // "analyzedInstructions": Array<any>;
-  "analyzedInstructions": Array<unknown>;
+  "analyzedInstructions": Array<AnalyzeRecipeInstructions200ResponseParsedInstructionsInner>;
   "cheap": boolean;
   "creditsText": string;
   "cuisines": Array<string>;

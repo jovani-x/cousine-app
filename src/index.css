@@ -5,6 +5,7 @@
 body {
   margin: 0;
   min-width: 320px;
+  font: var(--mui-font-body1);
 }
 
 a {

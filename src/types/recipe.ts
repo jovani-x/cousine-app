@@ -19,11 +19,11 @@ type SearchOpts = {
   isMyCollection: boolean;
 };
 
-type RecipeDetailsType = Pick<
-  RecipeInformation,
-  "vegetarian" | "vegan" | "glutenFree" | "dairyFree"
+type RecipeDetailsType = Partial<
+  Pick<RecipeInformation, "vegetarian" | "vegan" | "glutenFree" | "dairyFree">
 > & {
   caloriesObj?: IngredientInformationNutritionPropertiesInner;
+  servings?: number;
 };
 
 export { type RecipeDetailsType, type RecipeType, type SearchOpts };
