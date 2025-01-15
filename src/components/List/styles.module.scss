@@ -1,0 +1,39 @@
+.list {
+  --offset: 1.5em;
+  --beforeColor: var(--mui-palette-primary-dark);
+  --ulIcon: "\2726";
+
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+
+  li {
+    padding-left: var(--offset);
+
+    &::before {
+      display: inline-block;
+      min-width: var(--offset);
+      margin-left: calc(var(--offset) * -1);
+      color: var(--beforeColor);
+    }
+  }
+
+  &:is(ul) {
+    li {
+      &::before {
+        content: var(--ulIcon);
+      }
+    }
+  }
+
+  &:is(ol) {
+    counter-reset: number;
+
+    li {
+      &::before {
+        content: counter(number) ".";
+        counter-increment: number;
+      }
+    }
+  }
+}
