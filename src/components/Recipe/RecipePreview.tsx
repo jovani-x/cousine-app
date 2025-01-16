@@ -22,7 +22,7 @@ const RecipePreview = ({ data }: { data: RecipeType }) => {
     dairyFree,
     nutrition,
   } = data;
-  const pathName = `recipe_${id}`;
+  const pathName = `recipe_${id}_${title}`;
   const theme = useTheme();
   const caloriesObj = getRecipeCalories(nutrition);
 

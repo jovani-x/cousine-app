@@ -11,7 +11,9 @@ const getBreadcrumbName = (to: string, path: string) => {
   if (foundRoute) return foundRoute.text;
 
   // otherwise return path
-  const name = path.replace(/%20/g, " ");
+  // remove recipe_{id}_ from path and make first letter uppercase
+  const ix = path.indexOf("_", "recipe_".length);
+  const name = path.substring(ix + 1).replace(/%20/g, " ");
   return `${name.substring(0, 1).toUpperCase()}${name.substring(1)}`;
 };
 
