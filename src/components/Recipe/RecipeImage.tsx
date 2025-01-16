@@ -44,6 +44,7 @@ const RecipeImage = ({
           height="100%"
           alt={title}
           sx={{
+            aspectRatio: "inherit",
             opacity: imageLoading ? 0 : 1,
           }}
           onLoad={handleImageLoad}
