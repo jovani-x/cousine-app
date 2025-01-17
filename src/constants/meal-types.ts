@@ -1,0 +1,16 @@
+export enum MealTypes {
+  MainCourse = "main course",
+  SideDish = "side dish",
+  Dessert = "dessert",
+  Appetizer = "appetizer",
+  Salad = "salad",
+  Bread = "bread",
+  Breakfast = "breakfast",
+  Soup = "soup",
+  Beverage = "beverage",
+  Sauce = "sauce",
+  Marinade = "marinade",
+  Fingerfood = "fingerfood",
+  Snack = "snack",
+  Drink = "drink",
+}
