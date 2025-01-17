@@ -1,24 +1,21 @@
-import { QueryOptions, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { db } from "../db/db";
 import { RecipeType } from "../types/recipe";
+import { createQueryOpts } from "../utils/constants";
 import { getLocalRecipeIds } from "../utils/recipe";
 
 // return array of recipes
 // isRemote:
 // - true: from recipe API
 // - false: from indexedDB
-// queryOpts: QueryOptions
-const useGetRecipes = ({
-  isRemote = false,
-  queryOpts,
-}: {
-  isRemote?: boolean;
-  queryOpts?: Partial<QueryOptions>;
-}) => {
-  const getRecipes: () => Promise<RecipeType[] | undefined> = isRemote
+const useGetRecipes = ({ isRemote = false }: { isRemote?: boolean }) => {
+  const getRecipes: () => Promise<RecipeType[]> = isRemote
     ? getRecipesRemote
     : getRecipesLocal;
   const localIds = getLocalRecipeIds();
+  const queryOpts = {
+    ...createQueryOpts<RecipeType[]>(),
+  };
   const {
     data: recipes,
     isPending,
@@ -43,7 +40,7 @@ const useGetRecipes = ({
 };
 
 // return recipes from indexedDB
-const getRecipesLocal = async (): Promise<RecipeType[] | undefined> => {
+const getRecipesLocal = async (): Promise<RecipeType[]> => {
   const recipes = await db.recipes.toArray();
   return recipes;
 };
@@ -51,7 +48,7 @@ const getRecipesLocal = async (): Promise<RecipeType[] | undefined> => {
 // it is not necessary now
 // maybe for future:
 // return a few random recipes from recipe API ???
-const getRecipesRemote = async (): Promise<RecipeType[] | undefined> => {
+const getRecipesRemote = async (): Promise<RecipeType[]> => {
   return new Promise((_resolve, reject) => {
     setTimeout(() => {
       reject(errorMessages.NoRemoteMode);

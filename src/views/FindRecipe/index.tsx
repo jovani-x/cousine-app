@@ -6,7 +6,6 @@ import { SearchForm } from "../../components/SearchForm";
 import { Diets } from "../../constants/diets";
 import { useSearchRecipes } from "../../hooks/useSearchRecipes";
 import { RecipeType, SearchOpts } from "../../types/recipe";
-import { queryOpts } from "../../utils/constants";
 import { getErrorMessage } from "../../utils/helpers";
 
 const FindPage = () => {
@@ -46,7 +45,6 @@ const FindPage = () => {
 
   const { recipes, isPending, isError, error, refetch } = useSearchRecipes({
     searchOpts,
-    queryOpts,
   });
 
   useEffect(() => {

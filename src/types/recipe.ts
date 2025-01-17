@@ -1,3 +1,4 @@
+import { QueryObserverOptions } from "@tanstack/react-query";
 import { IngredientInformationNutrition } from "../models/IngredientInformationNutrition";
 import { IngredientInformationNutritionPropertiesInner } from "../models/IngredientInformationNutritionPropertiesInner";
 import { RecipeInformation } from "../models/RecipeInformation";
@@ -26,4 +27,14 @@ type RecipeDetailsType = Partial<
   servings?: number;
 };
 
-export { type RecipeDetailsType, type RecipeType, type SearchOpts };
+type OptionalQueryObserverOptions<T> = Omit<
+  QueryObserverOptions<T | undefined, Error>,
+  "queryFn" | "queryKey"
+>;
+
+export {
+  type OptionalQueryObserverOptions,
+  type RecipeDetailsType,
+  type RecipeType,
+  type SearchOpts,
+};

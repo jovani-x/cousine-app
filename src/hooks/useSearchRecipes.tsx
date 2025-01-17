@@ -1,32 +1,24 @@
-import { QueryOptions, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Diets } from "../constants/diets";
 import { db } from "../db/db";
+import { SearchRecipes200Response } from "../models/SearchRecipes200Response";
 import { RecipeType, SearchOpts } from "../types/recipe";
+import { createQueryOpts } from "../utils/constants";
 import { getRecipeApiKey, getRecipeApiUrl } from "../utils/recipe";
 
 // return array of recipes by params
 // searchOpts: SearchOpts
-// queryOpts: QueryOptions
-const useSearchRecipes = ({
-  searchOpts,
-  queryOpts,
-}: {
-  searchOpts?: SearchOpts;
-  queryOpts?: Partial<QueryOptions>;
-}) => {
+const useSearchRecipes = ({ searchOpts }: { searchOpts?: SearchOpts }) => {
   // isRemote:
   // - true: from recipe API
   // - false: from indexedDB
   const isRemote = !searchOpts ? false : !searchOpts.isMyCollection;
   const searchRecipes = isRemote ? searchRecipesRemote : searchRecipesLocal;
-
-  const queryObj = {
-    ...queryOpts,
-    queryKey: ["search-recipes", searchOpts],
-    queryFn: () => searchRecipes({ opts: searchOpts }),
+  const queryOpts = {
+    ...createQueryOpts<RecipeType[]>(),
+    enabled: false,
   };
-
   const {
     data: recipes,
     isPending,
@@ -34,7 +26,11 @@ const useSearchRecipes = ({
     isError,
     error,
     refetch,
-  } = useQuery(queryObj);
+  } = useQuery({
+    ...queryOpts,
+    queryKey: ["search-recipes", searchOpts],
+    queryFn: () => searchRecipes({ opts: searchOpts }),
+  });
 
   return {
     recipes,
@@ -79,7 +75,7 @@ const searchRecipesRemote = async ({ opts }: { opts?: SearchOpts }) => {
   const maxCaloriesStr = !maxCalories ? "" : `&maxCalories=${maxCalories}`;
   const fullQueryStr = `${apiUrl}/complexSearch?apiKey=${apiKey}&number=${resultNumber}&addRecipeInformation=${addRecipeInformation}&addRecipeNutrition=true${queryStr}${dietStr}${minCaloriesStr}${maxCaloriesStr}`;
 
-  const response = await axios.get(fullQueryStr, {});
+  const response = await axios.get<SearchRecipes200Response>(fullQueryStr, {});
 
   if (response.status !== 200 && response.statusText.toLowerCase() !== "ok") {
     if (response.status !== 402) {
@@ -89,7 +85,7 @@ const searchRecipesRemote = async ({ opts }: { opts?: SearchOpts }) => {
     throw new Error("Bad response.");
   }
 
-  return response.data.results;
+  return response.data.results as unknown as RecipeType[];
 };
 
 const matchDiets = ({

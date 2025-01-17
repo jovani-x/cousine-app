@@ -1,7 +1,8 @@
-import { QueryOptions, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { db } from "../db/db";
 import { RecipeType } from "../types/recipe";
+import { createQueryOpts } from "../utils/constants";
 import { getRecipeApiKey, getRecipeApiUrl } from "../utils/recipe";
 
 // return recipe:
@@ -9,17 +10,15 @@ import { getRecipeApiKey, getRecipeApiUrl } from "../utils/recipe";
 // isRemote:
 // - true: from recipe API
 // - false: from indexedDB
-// queryOpts: QueryOptions
 const useGetRecipe = ({
   id,
   isRemote = false,
-  queryOpts,
 }: {
   id?: string;
   isRemote?: boolean;
-  queryOpts?: Partial<QueryOptions>;
 }) => {
   const getRecipe = isRemote ? getRecipeRemote : getRecipeLocal;
+  const queryOpts = createQueryOpts<RecipeType>();
   const {
     data: recipe,
     isPending,
