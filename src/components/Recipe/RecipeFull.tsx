@@ -25,6 +25,9 @@ const RecipeFull = ({
   data?: RecipeType;
   loading?: boolean;
 }) => {
+  const theme = useTheme();
+  const fromMd = useMediaQuery(theme.breakpoints.up("md"));
+
   if (!data && !loading) return <RecipeNotFound />;
 
   const {
@@ -43,8 +46,6 @@ const RecipeFull = ({
     sourceUrl,
   } = data || {};
   const caloriesObj = getRecipeCalories(nutrition);
-  const theme = useTheme();
-  const fromMd = useMediaQuery(theme.breakpoints.up("md"));
 
   const cardStyles = {
     mb: 3,
