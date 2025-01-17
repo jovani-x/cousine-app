@@ -8,11 +8,11 @@ export const RecipeInstruction = ({
 }: {
   steps: Set<AnalyzeRecipeInstructions200ResponseParsedInstructionsInnerStepsInner>;
 }) => {
+  const theme = useTheme();
   const stepsArr = Array.from(steps);
   // if no data - show warning
   if (!stepsArr?.length) return <RecipeNotFound text="No data" />;
 
-  const theme = useTheme();
   const items = stepsArr.map(({ number, step }) => ({
     id: String(number),
     content: step,
