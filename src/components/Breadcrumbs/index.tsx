@@ -1,9 +1,8 @@
-import { Typography } from "@mui/material";
+import { Link, Typography } from "@mui/material";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { useTheme } from "@mui/material/styles";
 import { NavLink, useLocation } from "react-router-dom";
 import { routes } from "../../router";
-import styles from "./styles.module.scss";
 
 const getBreadcrumbName = (to: string, path: string) => {
   // if one of main routes return its name
@@ -20,43 +19,34 @@ const getBreadcrumbName = (to: string, path: string) => {
 const CustomBreadcrumbs = () => {
   const theme = useTheme();
   const location = useLocation();
-  const pathNames = location.pathname.split("/").filter((x) => x);
+  const pathNames = location.pathname.split("/");
 
   // hide breadcrumbs on home page
   if (
     pathNames.length === 0 ||
-    (pathNames.length === 1 && pathNames[0] === "/")
+    (pathNames.length === 2 && pathNames[0] === "" && pathNames[1] === "")
   )
     return null;
 
-  const linkStyle = {
-    "--link-color": theme.palette.primary[theme.palette.mode],
-    "--link-hover-color": theme.palette.primary.main,
-  } as React.CSSProperties;
-
   const renderedPath = pathNames.map((value, index) => {
-    const to = `/${pathNames.slice(0, index + 1).join("/")}`;
+    const to = `${pathNames.slice(0, index + 1).join("/")}`;
     const name = getBreadcrumbName(to, value);
     const isLast = index === pathNames.length - 1;
+    const isFirst = index === 0;
 
     return isLast ? (
-      <Typography key={to} sx={{ color: "text.primary" }}>
+      <Typography key={to} sx={{ color: theme.palette.text.primary }}>
         {name}
       </Typography>
     ) : (
-      <NavLink to={to} key={to} style={linkStyle} className={styles.link}>
-        {name}
-      </NavLink>
+      <Link to={to} key={to} component={NavLink} underline="always">
+        {!isFirst ? name : getBreadcrumbName("/", "home")}
+      </Link>
     );
   });
 
   return (
     <Breadcrumbs aria-label="breadcrumb" separator="/" sx={{ my: 2 }}>
-      {/* home */}
-      <NavLink to="/" style={linkStyle} className={styles.link}>
-        {getBreadcrumbName("/", "home")}
-      </NavLink>
-      {/* others */}
       {renderedPath}
     </Breadcrumbs>
   );
