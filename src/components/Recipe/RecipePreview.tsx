@@ -50,7 +50,7 @@ const RecipePreview = ({ data }: { data: RecipeType }) => {
   );
 
   return (
-    <Card sx={{ minHeight: "100%", display: "flex" }}>
+    <Card sx={{ display: "flex" }}>
       <CardActionArea
         component={NavLink}
         to={`/collection/${pathName}`}

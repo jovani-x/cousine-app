@@ -19,7 +19,7 @@ const CollectionGrid = ({
   ) : (
     collection.map((data) => {
       return (
-        <Grid size={size} key={data.id}>
+        <Grid size={size} key={data.id} sx={{ display: "flex" }}>
           <RecipePreview data={data} />
         </Grid>
       );
