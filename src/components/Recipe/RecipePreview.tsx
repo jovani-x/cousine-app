@@ -4,6 +4,7 @@ import CardActionArea from "@mui/material/CardActionArea";
 import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
 import { NavLink } from "react-router-dom";
+import { RoutePath } from "../../router";
 import { RecipeType } from "../../types/recipe";
 import { getRecipeCalories } from "../../utils/recipe";
 import { RecipeDetails } from "./RecipeDetails";
@@ -53,7 +54,7 @@ const RecipePreview = ({ data }: { data: RecipeType }) => {
     <Card sx={{ display: "flex" }}>
       <CardActionArea
         component={NavLink}
-        to={`/collection/${pathName}`}
+        to={`${RoutePath.Collection}/${pathName}`}
         sx={{
           display: "flex",
           flexDirection: "column",

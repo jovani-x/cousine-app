@@ -10,6 +10,7 @@ import LoginPage from "../views/Login";
 import ProfilePage from "../views/Profile";
 import RecipePage from "../views/Recipe";
 import ProtectedRoute from "./ProtectedRoute.tsx";
+import { RoutePath } from "./routes.ts";
 
 const router = createBrowserRouter(
   [
@@ -25,18 +26,19 @@ const router = createBrowserRouter(
       ),
       children: [
         {
-          path: "login",
+          path: RoutePath.Login,
           element: <LoginPage />,
         },
         {
           element: <ProtectedRoute />,
           children: [
             {
+              path: RoutePath.Home,
               element: <HomePage />,
               index: true,
             },
             {
-              path: "collection",
+              path: RoutePath.Collection,
               element: <CollectionPage />,
               children: [
                 {
@@ -46,12 +48,12 @@ const router = createBrowserRouter(
               ],
             },
             {
-              path: "find-recipe",
+              path: RoutePath.Search,
               element: <FindPage />,
             },
 
             {
-              path: "profile",
+              path: RoutePath.Profile,
               element: <ProfilePage />,
             },
           ],

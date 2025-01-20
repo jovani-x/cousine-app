@@ -2,7 +2,7 @@ import { Link, Typography } from "@mui/material";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { useTheme } from "@mui/material/styles";
 import { NavLink, useLocation } from "react-router-dom";
-import { routes } from "../../router";
+import { RoutePath, routes } from "../../router";
 
 const getBreadcrumbName = (to: string, path: string) => {
   // if one of main routes return its name
@@ -40,7 +40,7 @@ const CustomBreadcrumbs = () => {
       </Typography>
     ) : (
       <Link to={to} key={to} component={NavLink} underline="always">
-        {!isFirst ? name : getBreadcrumbName("/", "home")}
+        {!isFirst ? name : getBreadcrumbName(RoutePath.Home, "home")}
       </Link>
     );
   });

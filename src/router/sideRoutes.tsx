@@ -1,6 +1,7 @@
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
+import { RoutePath } from "./routes.ts";
 
 export type SideRouteType = {
   url: string;
@@ -10,17 +11,17 @@ export type SideRouteType = {
 
 export const routes: SideRouteType[] = [
   {
-    url: "/",
+    url: RoutePath.Home,
     text: "Home",
     IconTag: <HomeIcon />,
   },
   {
-    url: "/collection",
+    url: RoutePath.Collection,
     text: "My Recipe Collection",
     IconTag: <AutoStoriesIcon />,
   },
   {
-    url: "/find-recipe",
+    url: RoutePath.Search,
     text: "Find a Recipe",
     IconTag: <SearchIcon />,
   },

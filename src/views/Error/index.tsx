@@ -1,5 +1,6 @@
 import { Container, Typography, useTheme } from "@mui/material";
 import { isRouteErrorResponse, NavLink, useRouteError } from "react-router-dom";
+import { RoutePath } from "../../router/routes.ts";
 
 const ErrorPage = () => {
   const error = useRouteError();
@@ -23,7 +24,7 @@ const ErrorPage = () => {
       </Typography>
       <Typography>{errorMessage}</Typography>
       <NavLink
-        to={"/"}
+        to={RoutePath.Home}
         reloadDocument={true}
         style={{ textDecoration: "none" }}
       >

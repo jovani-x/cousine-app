@@ -6,6 +6,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../auth";
+import { RoutePath } from "../../router";
 import { useMenuAnchor } from "./MenuAnchorProvider";
 
 const UserMenu = ({ menuId }: { menuId: string }) => {
@@ -29,7 +30,11 @@ const UserMenu = ({ menuId }: { menuId: string }) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem to="/profile" component={NavLink} onClick={handleMenuClose}>
+      <MenuItem
+        to={RoutePath.Profile}
+        component={NavLink}
+        onClick={handleMenuClose}
+      >
         <IconButton size="small" color="inherit">
           <ManageAccountsIcon />
         </IconButton>
