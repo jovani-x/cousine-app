@@ -56,11 +56,21 @@ const getTimeStrFromMinutes = (readyInMinutes: number) => {
   return `${hours} h ${minutes} min`;
 };
 
+const getTriviaApiUrl = () => {
+  return import.meta.env.VITE_TRIVIA_API_URL as string;
+};
+
+const getNodeEnv = () => {
+  return import.meta.env.VITE_NODE_ENV as string;
+};
+
 export {
   fdataToNumber,
   getErrorMessage,
   getInitialStateFromEnum,
+  getNodeEnv,
   getTimeStrFromMinutes,
+  getTriviaApiUrl,
   getValuesFromFData,
   isAnySelected,
 };
