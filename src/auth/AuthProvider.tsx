@@ -1,17 +1,15 @@
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signin, signout } from "./auth";
-import { USER_SESSION_NAME } from "./constants";
 import { AuthContextType, AuthData, Session } from "./types";
+import { getUserSession, removeUserSession, setUserSession } from "./utils";
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const authContextErrorMessage = "Wrap components with <AuthProvider />";
 
 const AuthProvider = ({ children }: { children?: React.ReactNode }) => {
-  const [session, setSession] = useState<Session | null>(
-    JSON.parse(localStorage.getItem(USER_SESSION_NAME) || "null")
-  );
+  const [session, setSession] = useState<Session | null>(getUserSession());
   const navigate = useNavigate();
 
   const signIn = async ({ authData }: { authData: AuthData }) => {
@@ -21,12 +19,7 @@ const AuthProvider = ({ children }: { children?: React.ReactNode }) => {
         setSession({
           user: response.user,
         });
-        localStorage.setItem(
-          USER_SESSION_NAME,
-          JSON.stringify({
-            user: response.user,
-          })
-        );
+        setUserSession(response);
         navigate("/");
       } else {
         throw Error("Access denied.");
@@ -40,7 +33,7 @@ const AuthProvider = ({ children }: { children?: React.ReactNode }) => {
   const signOut = async () => {
     await signout();
     setSession(null);
-    localStorage.removeItem(USER_SESSION_NAME);
+    removeUserSession();
   };
 
   return (
