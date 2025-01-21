@@ -1,3 +1,3 @@
-# Cousine App
+# Cuisine App
 
 Under construction...

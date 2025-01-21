@@ -1,6 +1,6 @@
 import { OptionalQueryObserverOptions } from "../types/recipe";
 
-const AppName = "Cousine App";
+const AppName = "Cuisine App";
 
 type QueryData<T> = T;
 
