@@ -28,7 +28,7 @@ const Header = () => {
             position="fixed"
             sx={{ zIndex: theme.zIndex.drawer + 1, color: color }}
           >
-            <Toolbar>
+            <Toolbar sx={{ minHeight: "var(--header-height)" }}>
               <SideDrawerToggler />
               <Box
                 sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}
