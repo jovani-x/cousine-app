@@ -6,6 +6,11 @@ const testAuthData = {
   password: "12345",
 };
 
+const testAuthData2 = {
+  email: "test.username2@test.test",
+  password: "98765",
+};
+
 const LoginPage = () => {
   const { authentication } = useAuth();
   const authData = testAuthData;
@@ -16,6 +21,13 @@ const LoginPage = () => {
       <p>
         <button onClick={() => authentication.signIn({ authData })}>
           Test Login
+        </button>
+      </p>
+      <p>
+        <button
+          onClick={() => authentication.signIn({ authData: testAuthData2 })}
+        >
+          Test Login (another user)
         </button>
       </p>
       <p>

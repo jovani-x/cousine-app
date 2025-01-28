@@ -8,6 +8,13 @@ const testUser = {
   image: undefined,
 };
 
+const testUser2 = {
+  id: "test_98765",
+  name: "Test Username2",
+  email: "test.username2@test.test",
+  image: undefined,
+};
+
 export const signin = async ({
   authData,
 }: {
@@ -25,7 +32,13 @@ export const signin = async ({
 
   // fake response
   return new Promise((resolve) => {
-    setTimeout(() => resolve({ user: testUser }), 2000);
+    const user =
+      authData.email === testUser.email
+        ? testUser
+        : authData.email === testUser2.email
+        ? testUser2
+        : undefined;
+    setTimeout(() => resolve(!user ? null : { user }), 2000);
   });
 };
 

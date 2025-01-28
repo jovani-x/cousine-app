@@ -18,4 +18,15 @@ const getUserName = () => {
   return data?.user?.name;
 };
 
-export { getUserName, getUserSession, removeUserSession, setUserSession };
+const getUserId = () => {
+  const data = getUserSession();
+  return data?.user?.id;
+};
+
+export {
+  getUserId,
+  getUserName,
+  getUserSession,
+  removeUserSession,
+  setUserSession,
+};
