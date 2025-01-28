@@ -1,11 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from "../App.tsx";
-import AuthProvider from "../auth";
+import App, { AppWrapper } from "../App";
 import CollectionPage from "../views/Collection";
 import ErrorPage from "../views/Error";
 import FindPage from "../views/FindRecipe";
 import HomePage from "../views/Home";
-import Layout from "../views/Layout.tsx";
 import LoginPage from "../views/Login";
 import ProfilePage from "../views/Profile";
 import RecipePage from "../views/Recipe";
@@ -18,11 +16,9 @@ const router = createBrowserRouter(
       path: "/",
       element: <App />,
       errorElement: (
-        <AuthProvider>
-          <Layout>
-            <ErrorPage />
-          </Layout>
-        </AuthProvider>
+        <AppWrapper>
+          <ErrorPage />
+        </AppWrapper>
       ),
       children: [
         {
@@ -51,7 +47,10 @@ const router = createBrowserRouter(
               path: RoutePath.Search,
               element: <FindPage />,
             },
-
+            {
+              path: `${RoutePath.Search}/:id`,
+              element: <RecipePage />,
+            },
             {
               path: RoutePath.Profile,
               element: <ProfilePage />,
