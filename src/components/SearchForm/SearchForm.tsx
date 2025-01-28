@@ -11,16 +11,14 @@ import {
 } from "../../utils/helpers";
 import { Checkboxes } from "./Checkboxes";
 import { FormAccordion } from "./FormAccordion";
-import { FormSwitcher } from "./FormSwitcher";
 
 export const SearchForm = ({
   action,
 }: {
   action: (props: SearchOpts) => void;
 }) => {
-  // checkboxes(MUI Checkbox and Switcher) are controlled components
+  // checkboxes(MUI Checkbox) are controlled components
   // due to https://github.com/mui/material-ui/issues/40244
-  const [isMyStore, setIsMyStore] = useState(true);
   const [diets, setDiets] = useState(
     getInitialStateFromEnum({ enumObj: Diets, initValue: false })
   );
@@ -44,12 +42,10 @@ export const SearchForm = ({
     const fdata = new FormData(e.target as HTMLFormElement);
     const data = Object.fromEntries([...fdata.entries()]);
 
-    const { query, isMyCollection, minCalories, maxCalories, ...restData } =
-      data;
+    const { query, minCalories, maxCalories, ...restData } = data;
 
     action({
       query: String(query),
-      isMyCollection: Boolean(isMyCollection),
       minCalories: fdataToNumber(minCalories),
       maxCalories: fdataToNumber(maxCalories),
       diets: getValuesFromFData({
@@ -63,19 +59,9 @@ export const SearchForm = ({
   };
 
   const handleReset = () => {
-    setIsMyStore(true);
     setDiets(getInitialStateFromEnum({ enumObj: Diets, initValue: false }));
     setDietsExpanded(false);
   };
-
-  const renderedSwitcher = (
-    <FormSwitcher
-      label="In My Collection"
-      name="isMyCollection"
-      isChecked={isMyStore}
-      onClick={() => setIsMyStore((prev) => !prev)}
-    />
-  );
 
   const renderedQuery = (
     <TextField {...inputAttrs} label="Search" name="query" />
@@ -115,7 +101,6 @@ export const SearchForm = ({
   return (
     <form id="search-form" onSubmit={handleSearch} onReset={handleReset}>
       <Grid container spacing={2} sx={{ mb: 2 }}>
-        <Grid size={12}>{renderedSwitcher}</Grid>
         <Grid size={{ xs: 12, sm: 6 }}>{renderedQuery}</Grid>
         <Grid size={caloriesSize}>{renderedMinCalories}</Grid>
         <Grid size={caloriesSize}>{renderedMaxCalories}</Grid>

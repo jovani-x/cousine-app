@@ -3,10 +3,12 @@ import Card, { CardOwnProps } from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { RoutePath } from "../../router";
 import { RecipeType } from "../../types/recipe";
-import { getRecipeCalories } from "../../utils/recipe";
+import { getErrorMessage } from "../../utils/helpers";
+import { getRecipeCalories, isIncluded } from "../../utils/recipe";
 import { RecipeDetails } from "./RecipeDetails";
 import { RecipeImage } from "./RecipeImage";
 import { RecipeTime } from "./RecipeTime";
@@ -35,6 +37,20 @@ const RecipePreview = ({
   const theme = useTheme();
   const caloriesObj = getRecipeCalories(nutrition);
   const { sx, ...cardPropsRest } = cardProps || {};
+  const [isAdded, setIsAdded] = useState(false);
+
+  // check if user collection includes provided recipe
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await isIncluded({ recipeId: String(id) });
+        setIsAdded(res);
+      } catch (err) {
+        console.log(getErrorMessage(err));
+      }
+    };
+    fetchData();
+  }, [id]);
 
   const renderedTitle = (
     <Typography
@@ -68,7 +84,7 @@ const RecipePreview = ({
     <Card {...cardPropsRest} sx={{ display: "flex", ...sx }}>
       <CardActionArea
         component={NavLink}
-        to={`${RoutePath.Collection}/${pathName}`}
+        to={`${isAdded ? RoutePath.Collection : RoutePath.Search}/${pathName}`}
         sx={{
           display: "flex",
           flexDirection: "column",

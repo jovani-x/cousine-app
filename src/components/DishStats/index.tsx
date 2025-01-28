@@ -7,9 +7,7 @@ import { RoutePath } from "../../router/routes";
 import { getErrorMessage } from "../../utils/helpers";
 
 export const DishStats = () => {
-  const { recipes, isPending, isError, error } = useGetRecipes({
-    isRemote: false,
-  });
+  const { recipes, isPending, isError, error } = useGetRecipes();
   const theme = useTheme();
   const color = theme.palette.primary[theme.palette.mode];
   const boxSx = {

@@ -1,13 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { TriviaType } from "../types/trivia";
 import { createQueryOpts } from "../utils/constants";
 import { getNodeEnv, getTriviaApiUrl } from "../utils/helpers";
 import { getRecipeApiKey } from "../utils/recipe";
 
-// return trivia from recipe API
+// return trivia from recipe API, statuses (isPending, isFetching, isError) and error
 const useGetTrivia = () => {
+  const queryClient = useQueryClient();
   const queryOpts = createQueryOpts<TriviaType>();
+  const queryKey = ["trivia"];
   const {
     data: trivia,
     isPending,
@@ -16,8 +18,9 @@ const useGetTrivia = () => {
     isError,
   } = useQuery({
     ...queryOpts,
-    queryKey: ["trivia"],
+    queryKey,
     queryFn: () => getTrivia(),
+    initialData: () => queryClient.getQueryData(queryKey),
   });
 
   return {
@@ -51,13 +54,18 @@ const getTrivia = async (): Promise<TriviaType | undefined> => {
 
   if (response.status !== 200 && response.statusText.toLowerCase() !== "ok") {
     if (response.status !== 402) {
-      throw new Error("Sorry, but the API daily quota is used up.");
+      throw new Error(errorMessages.DailyQuota);
     }
 
-    throw new Error("Bad response.");
+    throw new Error(errorMessages.BadResponse);
   }
 
   return response.data;
+};
+
+const errorMessages = {
+  BadResponse: "Bad response.",
+  DailyQuota: "Sorry, the daily API quota has been reached.",
 };
 
 export { getTrivia, useGetTrivia };

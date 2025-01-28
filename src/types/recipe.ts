@@ -17,7 +17,6 @@ type SearchOpts = {
   addRecipeInformation?: boolean;
   minCalories?: number;
   maxCalories?: number;
-  isMyCollection: boolean;
 };
 
 type RecipeDetailsType = Partial<

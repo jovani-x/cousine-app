@@ -9,7 +9,6 @@ import { RecipeType, SearchOpts } from "../../types/recipe";
 import { getErrorMessage } from "../../utils/helpers";
 
 const FindPage = () => {
-  const [isMyCollection, setIsMyCollection] = useState(true);
   const [query, setQuery] = useState<string | undefined>(undefined);
   const [minCalories, setMinCalories] = useState<number | undefined>(undefined);
   const [maxCalories, setMaxCalories] = useState<number | undefined>(undefined);
@@ -19,13 +18,11 @@ const FindPage = () => {
   const [isEmpty, setIsEmpty] = useState(true);
 
   const searchAction = ({
-    isMyCollection,
     query,
     minCalories,
     maxCalories,
     diets,
   }: SearchOpts) => {
-    setIsMyCollection(isMyCollection);
     setQuery(query);
     setMinCalories(minCalories);
     setMaxCalories(maxCalories);
@@ -34,7 +31,6 @@ const FindPage = () => {
   };
 
   const searchOpts = {
-    isMyCollection,
     diets,
     minCalories,
     maxCalories,
@@ -51,15 +47,7 @@ const FindPage = () => {
     if (!isEmpty) {
       refetch();
     }
-  }, [
-    query,
-    minCalories,
-    maxCalories,
-    diets,
-    isMyCollection,
-    refetch,
-    isEmpty,
-  ]);
+  }, [query, minCalories, maxCalories, diets, refetch, isEmpty]);
 
   if (isError) return <ErrorMessage error={getErrorMessage(error)} />;
 

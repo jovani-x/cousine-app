@@ -1,24 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { db } from "../db/db";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { RecipeType } from "../types/recipe";
 import { createQueryOpts } from "../utils/constants";
-import { getRecipeApiKey, getRecipeApiUrl } from "../utils/recipe";
+import { getRecipeRemote } from "../utils/recipe";
 
-// return recipe:
+type UseGetRecipeOpts = { id?: string };
+
+// return recipe, statuses (isPending, isFetching, isError), error and refetch function
+// options:
 // id: recipe id
-// isRemote:
-// - true: from recipe API
-// - false: from indexedDB
-const useGetRecipe = ({
-  id,
-  isRemote = false,
-}: {
-  id?: string;
-  isRemote?: boolean;
-}) => {
-  const getRecipe = isRemote ? getRecipeRemote : getRecipeLocal;
+const useGetRecipe = (opts?: UseGetRecipeOpts) => {
+  const { id } = opts || {};
+  const queryClient = useQueryClient();
   const queryOpts = createQueryOpts<RecipeType>();
+  const queryKey = ["recipe", id ?? ""];
   const {
     data: recipe,
     isPending,
@@ -28,8 +22,9 @@ const useGetRecipe = ({
     refetch,
   } = useQuery({
     ...queryOpts,
-    queryKey: ["recipe", id ?? ""],
-    queryFn: () => getRecipe({ recipeId: id }),
+    queryKey,
+    queryFn: () => getRecipeRemote({ recipeId: id }),
+    initialData: () => queryClient.getQueryData(queryKey),
   });
 
   if (!id) throw new Error(errorMessages.IdRequired);
@@ -44,51 +39,9 @@ const useGetRecipe = ({
   };
 };
 
-// return recipe from recipe API
-const getRecipeRemote = async ({
-  recipeId,
-}: {
-  recipeId?: string;
-}): Promise<RecipeType | undefined> => {
-  const apiKey = getRecipeApiKey();
-  const apiUrl = getRecipeApiUrl();
-  const id = Number(recipeId);
-
-  if (!id) throw new Error(errorMessages.IdRequired);
-  if (isNaN(id)) throw new Error(errorMessages.IdType);
-
-  const response = await axios.get<Promise<RecipeType | undefined>>(
-    `${apiUrl}/${id}/information?apiKey=${apiKey}&includeNutrition=true`
-  );
-
-  if (response.status !== 200 && response.statusText.toLowerCase() !== "ok") {
-    if (response.status !== 402) {
-      throw new Error("Sorry, but the API daily quota is used up.");
-    }
-
-    throw new Error("Bad response.");
-  }
-
-  return response.data;
-};
-
-// return recipe from indexedDB
-const getRecipeLocal = async ({
-  recipeId,
-}: {
-  recipeId?: string;
-}): Promise<RecipeType | undefined> => {
-  const id = Number(recipeId);
-
-  if (!id) throw new Error(errorMessages.IdRequired);
-  if (isNaN(id)) throw new Error(errorMessages.IdType);
-
-  return await db.recipes.get({ id });
-};
-
 const errorMessages = {
   IdRequired: "Recipe ID is required.",
   IdType: "ID should be number.",
 };
 
-export { errorMessages, getRecipeLocal, getRecipeRemote, useGetRecipe };
+export { errorMessages, useGetRecipe };

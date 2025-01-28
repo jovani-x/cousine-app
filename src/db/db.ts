@@ -1,13 +1,17 @@
 import Dexie, { type EntityTable } from "dexie";
-import { RecipeType } from "../types/recipe";
 
+type UserRecipe = {
+  userId: string;
+  recipesIds?: string[];
+};
+
+// db with user's recipe collection (recipe IDs)
 const db = new Dexie("recipesdb") as Dexie & {
-  recipes: EntityTable<RecipeType, "id">;
+  userRecipes: EntityTable<UserRecipe, "userId">;
 };
 
 db.version(1).stores({
-  recipes:
-    "id, title, image, servings, readyInMinutes, summary, instructions, analyzedInstructions, extendedIngredients, dishTypes, diets, occasions, winePairing, nutrition",
+  userRecipes: "userId, recipesIds",
 });
 
-export { db };
+export { db, type UserRecipe };

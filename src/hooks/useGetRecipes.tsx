@@ -1,21 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
-import { db } from "../db/db";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { RecipeType } from "../types/recipe";
 import { createQueryOpts } from "../utils/constants";
-import { getLocalRecipeIds } from "../utils/recipe";
+import { getRecipeIds, getRecipesRemote } from "../utils/recipe";
 
-// return array of recipes
-// isRemote:
-// - true: from recipe API
-// - false: from indexedDB
-const useGetRecipes = ({ isRemote = false }: { isRemote?: boolean }) => {
-  const getRecipes: () => Promise<RecipeType[]> = isRemote
-    ? getRecipesRemote
-    : getRecipesLocal;
-  const localIds = getLocalRecipeIds();
+type UseGetRecipesOpts = { ids?: string[] };
+
+// return array of recipes, statuses (isPending, isFetching, isError), error and refetch function
+// options:
+// ids?: string[]; - recipe IDs
+// - if no provided IDs - return all recipes from user's collection
+const useGetRecipes = (opts?: UseGetRecipesOpts) => {
+  const { ids } = opts || {};
+  const [recipeIds, setRecipeIds] = useState(ids);
+  const queryClient = useQueryClient();
   const queryOpts = {
     ...createQueryOpts<RecipeType[]>(),
+    enabled: Boolean(recipeIds),
   };
+  const queryKey = ["recipes", recipeIds];
   const {
     data: recipes,
     isPending,
@@ -25,9 +28,20 @@ const useGetRecipes = ({ isRemote = false }: { isRemote?: boolean }) => {
     refetch,
   } = useQuery({
     ...queryOpts,
-    queryKey: ["recipes", localIds],
-    queryFn: getRecipes,
+    queryKey,
+    queryFn: () => getRecipesRemote({ ids: recipeIds }),
+    initialData: () => queryClient.getQueryData(queryKey),
   });
+
+  // fetch user's recipe IDs
+  useEffect(() => {
+    const fetchIds = async () => {
+      setRecipeIds(await getRecipeIds());
+    };
+    if (!ids) {
+      fetchIds();
+    }
+  }, [ids]);
 
   return {
     recipes,
@@ -39,25 +53,4 @@ const useGetRecipes = ({ isRemote = false }: { isRemote?: boolean }) => {
   };
 };
 
-// return recipes from indexedDB
-const getRecipesLocal = async (): Promise<RecipeType[]> => {
-  const recipes = await db.recipes.toArray();
-  return recipes;
-};
-
-// it is not necessary now
-// maybe for future:
-// return a few random recipes from recipe API ???
-const getRecipesRemote = async (): Promise<RecipeType[]> => {
-  return new Promise((_resolve, reject) => {
-    setTimeout(() => {
-      reject(errorMessages.NoRemoteMode);
-    }, 2000);
-  });
-};
-
-const errorMessages = {
-  NoRemoteMode: 'Use param "{ isRemote: false }"!',
-};
-
-export { errorMessages, getRecipesLocal, getRecipesRemote, useGetRecipes };
+export { useGetRecipes };
