@@ -8,7 +8,7 @@ import {
 import ErrorMessage from "../../components/ErrorMessage";
 import { RecipePreview } from "../../components/Recipe";
 import { useGetRandomRecipe } from "../../hooks/useGetRandomRecipe";
-import { getErrorMessage, getNodeEnv } from "../../utils/helpers";
+import { getErrorMessage } from "../../utils/helpers";
 
 export const TryNewRecipe = ({
   paperProps,
@@ -19,10 +19,7 @@ export const TryNewRecipe = ({
 }) => {
   const theme = useTheme();
   const color = theme.palette.primary[theme.palette.mode];
-  const isRemoteRandomRecipe = getNodeEnv() === "production";
-  const { recipe, isPending, isError, error } = useGetRandomRecipe({
-    isRemote: isRemoteRandomRecipe,
-  });
+  const { recipe, isPending, isError, error } = useGetRandomRecipe();
   const { sx, ...paperPropsRest } = paperProps || {};
   const { sx: cardSx, ...cardPropsRest } = cardProps || {};
 
