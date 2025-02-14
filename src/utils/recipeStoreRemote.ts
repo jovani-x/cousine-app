@@ -1,12 +1,8 @@
 import axios from "axios";
-import { GetRandomRecipes200Response } from "../models/GetRandomRecipes200Response";
-import { SearchRecipes200Response } from "../models/SearchRecipes200Response";
-import { RecipeType, SearchOpts } from "../types/recipe";
+import type { GetRandomRecipes200Response } from "../models/GetRandomRecipes200Response";
+import type { SearchRecipes200Response } from "../models/SearchRecipes200Response";
+import type { RecipeType, SearchOpts } from "../types/recipe";
 import { getDietsStr, getQueryStr } from "./recipeSearchHelpers";
-
-const getRecipeApiKey = () => {
-  return import.meta.env.VITE_RECIPE_API_KEY as string;
-};
 
 const getRecipeApiUrl = () => {
   return import.meta.env.VITE_RECIPE_API_URL as string;
@@ -18,7 +14,6 @@ const getRecipeRemote = async ({
 }: {
   recipeId?: string;
 }): Promise<RecipeType | undefined> => {
-  const apiKey = getRecipeApiKey();
   const apiUrl = getRecipeApiUrl();
   const id = Number(recipeId);
 
@@ -30,7 +25,8 @@ const getRecipeRemote = async ({
 
   // request to remote API
   const response = await axios.get<Promise<RecipeType | undefined>>(
-    `${apiUrl}/${id}/information?apiKey=${apiKey}&includeNutrition=true`
+    `${apiUrl}/${id}/information?includeNutrition=true`,
+    { withCredentials: true }
   );
 
   if (response.status !== 200 && response.statusText.toLowerCase() !== "ok") {
@@ -60,12 +56,12 @@ const getRecipesRemote = async ({
   }
 
   // request to remote API
-  const apiKey = getRecipeApiKey();
   const apiUrl = getRecipeApiUrl();
   const idsStr = ids.join(",");
 
   const response = await axios.get<Promise<RecipeType[]>>(
-    `${apiUrl}/informationBulk?apiKey=${apiKey}&ids=${idsStr}&includeNutrition=true`
+    `${apiUrl}/informationBulk?ids=${idsStr}&includeNutrition=true`,
+    { withCredentials: true }
   );
 
   if (response.status !== 200 && response.statusText.toLowerCase() !== "ok") {
@@ -81,11 +77,11 @@ const getRecipesRemote = async ({
 
 // return random recipe data
 const getRandomRecipeRemote = async (): Promise<RecipeType | undefined> => {
-  const apiKey = getRecipeApiKey();
   const apiUrl = getRecipeApiUrl();
 
   const response = await axios.get<GetRandomRecipes200Response>(
-    `${apiUrl}/random/?apiKey=${apiKey}&includeNutrition=true`
+    `${apiUrl}/random/?includeNutrition=true`,
+    { withCredentials: true }
   );
 
   if (response.status !== 200 && response.statusText.toLowerCase() !== "ok") {
@@ -101,7 +97,6 @@ const getRandomRecipeRemote = async (): Promise<RecipeType | undefined> => {
 
 // return found recipes data by params SearchOpts
 const searchRecipesRemote = async ({ opts }: { opts?: SearchOpts }) => {
-  const apiKey = getRecipeApiKey();
   const apiUrl = getRecipeApiUrl();
 
   const {
@@ -118,10 +113,12 @@ const searchRecipesRemote = async ({ opts }: { opts?: SearchOpts }) => {
   const dietStr = getDietsStr(diets);
   const minCaloriesStr = !minCalories ? "" : `&minCalories=${minCalories}`;
   const maxCaloriesStr = !maxCalories ? "" : `&maxCalories=${maxCalories}`;
-  const fullQueryStr = `${apiUrl}/complexSearch?apiKey=${apiKey}&number=${resultNumber}&addRecipeInformation=${addRecipeInformation}&addRecipeNutrition=true${queryStr}${dietStr}${minCaloriesStr}${maxCaloriesStr}`;
+  const fullQueryStr = `${apiUrl}/complexSearch?number=${resultNumber}&addRecipeInformation=${addRecipeInformation}&addRecipeNutrition=true${queryStr}${dietStr}${minCaloriesStr}${maxCaloriesStr}`;
 
   // request to remote API
-  const response = await axios.get<SearchRecipes200Response>(fullQueryStr, {});
+  const response = await axios.get<SearchRecipes200Response>(fullQueryStr, {
+    withCredentials: true,
+  });
 
   if (response.status !== 200 && response.statusText.toLowerCase() !== "ok") {
     if (response.status !== 402) {
@@ -145,7 +142,6 @@ const errorMessages = {
 export {
   errorMessages,
   getRandomRecipeRemote,
-  getRecipeApiKey,
   getRecipeApiUrl,
   getRecipeRemote,
   getRecipesRemote,

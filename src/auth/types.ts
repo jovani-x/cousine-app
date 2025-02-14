@@ -15,7 +15,7 @@ export type AuthData = {
 export type AuthContextType = {
   session: Session | null;
   authentication: {
-    signIn: ({ authData }: { authData: AuthData }) => void;
+    signIn: ({ authData }: { authData: AuthData }) => Promise<Session | null>;
     signOut: () => void;
   };
 };

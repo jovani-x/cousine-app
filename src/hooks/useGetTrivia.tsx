@@ -3,7 +3,6 @@ import axios from "axios";
 import { TriviaType } from "../types/trivia";
 import { createQueryOpts } from "../utils/constants";
 import { getNodeEnv, getTriviaApiUrl } from "../utils/helpers";
-import { getRecipeApiKey } from "../utils/recipe";
 
 // return trivia from recipe API, statuses (isPending, isFetching, isError) and error
 const useGetTrivia = () => {
@@ -33,7 +32,6 @@ const useGetTrivia = () => {
 };
 
 const getTrivia = async (): Promise<TriviaType | undefined> => {
-  const apiKey = getRecipeApiKey();
   const apiUrl = getTriviaApiUrl();
 
   // if not 'production' return fake text
@@ -49,7 +47,8 @@ const getTrivia = async (): Promise<TriviaType | undefined> => {
   }
 
   const response = await axios.get<Promise<TriviaType | undefined>>(
-    `${apiUrl}?apiKey=${apiKey}`
+    `${apiUrl}`,
+    { withCredentials: true }
   );
 
   if (response.status !== 200 && response.statusText.toLowerCase() !== "ok") {

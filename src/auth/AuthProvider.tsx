@@ -1,39 +1,59 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signin, signout } from "./auth";
-import { AuthContextType, AuthData, Session } from "./types";
-import { getUserSession, removeUserSession, setUserSession } from "./utils";
+import type { UserType } from "../types/user";
+import {
+  getRequestedRoute,
+  removeRequestedRoute,
+} from "../utils/requestedRoute";
+import { checkme, signin, signout } from "./auth";
+import type { AuthContextType, AuthData, Session } from "./types";
+import { removeUserSession, setUserSession } from "./utils";
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const authContextErrorMessage = "Wrap components with <AuthProvider />";
 
 const AuthProvider = ({ children }: { children?: React.ReactNode }) => {
-  const [session, setSession] = useState<Session | null>(getUserSession());
+  const user = useCheckMe();
+  const [session, setSession] = useState<Session | null>(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (user) {
+      setSession({ user });
+      setUserSession({ user }); // localStorage
+      // redirect user to requested pathname or home
+      const requestedRoute = getRequestedRoute();
+      navigate(requestedRoute ?? "/", { replace: true });
+      removeRequestedRoute();
+    } else {
+      setSession(null);
+      removeUserSession(); // localStorage
+    }
+  }, [user, navigate]);
+
+  // ! errors will bubble up
   const signIn = async ({ authData }: { authData: AuthData }) => {
-    try {
-      const response = await signin({ authData });
-      if (response?.user) {
-        setSession({
-          user: response.user,
-        });
-        setUserSession(response);
-        navigate("/");
-      } else {
-        throw Error("Access denied.");
-      }
-    } catch (error) {
-      // show error(s)
-      console.log(error instanceof Error ? error.message : error);
+    const response = await signin({ authData });
+    const { user } = response || {};
+    if (response && user) {
+      setSession(response);
+      setUserSession(response); // localStorage
+      return { user };
+    } else {
+      throw Error("Access denied.");
     }
   };
 
   const signOut = async () => {
-    await signout();
-    setSession(null);
-    removeUserSession();
+    try {
+      await signout();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setSession(null);
+      removeUserSession(); // localStorage
+    }
   };
 
   return (
@@ -48,11 +68,37 @@ const AuthProvider = ({ children }: { children?: React.ReactNode }) => {
   );
 };
 
-export default AuthProvider;
-
-export const useAuth = () => {
+const useAuth = () => {
   const authCtx = useContext(AuthContext);
   if (!authCtx) throw Error(authContextErrorMessage);
 
   return authCtx;
 };
+
+// hook to check token in cookie
+const useCheckMe = () => {
+  const [user, setUser] = useState<UserType | null>(null);
+
+  useEffect(() => {
+    const checkMe = async () => {
+      try {
+        const userData = await checkme();
+        if (userData) {
+          setUser(userData);
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        setUser(null);
+        console.log(error);
+      }
+    };
+    checkMe();
+  }, []);
+
+  return user;
+};
+
+export default AuthProvider;
+
+export { useAuth, useCheckMe };

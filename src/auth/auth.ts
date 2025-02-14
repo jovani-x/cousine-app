@@ -1,56 +1,41 @@
-import { AuthData, Session } from "./types";
+import axios from "axios";
+import { UserType } from "../types/user";
+import type { AuthData, Session } from "./types";
 
-// fake user data
-const testUser = {
-  id: "test_12345",
-  name: "Test Username",
-  email: "test.username@test.test",
-  image: undefined,
-};
-
-const testUser2 = {
-  id: "test_98765",
-  name: "Test Username2",
-  email: "test.username2@test.test",
-  image: undefined,
-};
-
-export const signin = async ({
+// login
+// ! errors will bubble up
+const signin = async ({
   authData,
 }: {
   authData: AuthData;
 }): Promise<Session | null> => {
+  // no credentials
   if (!authData) return null;
 
-  // try {
-  //   const user = await loginFn(authData);
-  //   return { user };
-  // } catch (error) {
-  //   console.log(error.message);
-  //   return null;
-  // }
-
-  // fake response
-  return new Promise((resolve) => {
-    const user =
-      authData.email === testUser.email
-        ? testUser
-        : authData.email === testUser2.email
-        ? testUser2
-        : undefined;
-    setTimeout(() => resolve(!user ? null : { user }), 2000);
-  });
+  const loginUrl = import.meta.env.VITE_RECIPE_LOGIN_URL as string;
+  const res = await axios.post(
+    loginUrl,
+    { ...authData },
+    { withCredentials: true }
+  );
+  const { user } = res?.data || {};
+  return user ? { user } : null;
 };
 
-export const signout = async () => {
-  // try {
-  //   await logoutFn();
-  // } catch (error) {
-  //   console.log(error.message);
-  // }
-
-  // fake response
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(undefined), 2000);
-  });
+// logout
+// ! errors will bubble up
+const signout = async () => {
+  const logoutUrl = import.meta.env.VITE_RECIPE_LOGOUT_URL as string;
+  const res = await axios.post(logoutUrl, {}, { withCredentials: true });
+  return res.data.message;
 };
+
+// check user token
+// ! errors will bubble up
+const checkme = async (): Promise<UserType | null> => {
+  const checkMeUrl = import.meta.env.VITE_RECIPE_CHECKME_URL as string;
+  const res = await axios.get(checkMeUrl, { withCredentials: true });
+  return res.data?.user ?? null;
+};
+
+export { checkme, signin, signout };
