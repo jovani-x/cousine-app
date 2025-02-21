@@ -22,15 +22,20 @@ const AuthProvider = ({ children }: { children?: React.ReactNode }) => {
     if (user) {
       setSession({ user });
       setUserSession({ user }); // localStorage
-      // redirect user to requested pathname or home
-      const requestedRoute = getRequestedRoute();
-      navigate(requestedRoute ?? "/", { replace: true });
-      removeRequestedRoute();
     } else {
       setSession(null);
       removeUserSession(); // localStorage
     }
-  }, [user, navigate]);
+  }, [user]);
+
+  useEffect(() => {
+    if (!session) return;
+
+    // redirect user to requested pathname or home
+    const requestedRoute = getRequestedRoute();
+    navigate(requestedRoute ?? "/", { replace: true });
+    removeRequestedRoute();
+  }, [session, navigate]);
 
   // ! errors will bubble up
   const signIn = async ({ authData }: { authData: AuthData }) => {
